@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timer Example</title>
+<style>
+  body {
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  #timer {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+  #totalCount, #todayCount {
+    font-size: 36px;
+  }
+  button {
+    font-size: 18px;
+    margin: 5px;
+  }
+</style>
+</head>
+<body>
+  <div id="timer">00:00:00</div>
+  <div>Total Count: <span id="totalCount">0</span></div>
+  <div>Today's Count: <span id="todayCount">0</span></div>
+  <button onclick="startTimer()">Start Timer</button>
+  <button onclick="pauseTimer()">Pause Timer</button>
+  <button onclick="addCount()">Add Count</button>
+  <button onclick="addToTotalCount()">Add to Total Count</button>
+  <button onclick="resetTodayCount()">Reset Today's Count</button>
+
+  <script>
+    let timerInterval;
+    let totalSeconds = 0;
+    let todayCount = parseInt(localStorage.getItem("todayCount")) || 0;
+    let totalCount = parseInt(localStorage.getItem("totalCount")) || 0;
+
+    function startTimer() {
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      totalSeconds++;
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      document.getElementById("timer").innerText = formatTime(hours) + ":" + formatTime(minutes) + ":" + formatTime(seconds);
+    }
+
+    function formatTime(time) {
+      return time < 10 ? "0" + time : time;
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function addCount() {
+      todayCount++;
+      localStorage.setItem("todayCount", todayCount);
+      document.getElementById("todayCount").innerText = todayCount;
+    }
+
+    function addToTotalCount() {
+      totalCount++;
+      localStorage.setItem("totalCount", totalCount);
+      document.getElementById("totalCount").innerText = totalCount;
+    }
+
+    function resetTodayCount() {
+      todayCount = 0;
+      localStorage.setItem("todayCount", todayCount);
+      document.getElementById("todayCount").innerText = todayCount;
+    }
+
+    window.onload = function() {
+      document.getElementById("totalCount").innerText = totalCount;
+      document.getElementById("todayCount").innerText = todayCount;
+    }
+  </script>
+</body>
+</html>
